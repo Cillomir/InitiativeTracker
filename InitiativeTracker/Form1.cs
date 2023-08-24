@@ -5,9 +5,11 @@
  * 
  * A lightweight initiative tracker for tabletop games
  ************************************************** */
+using InitiativeTracker.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -27,8 +29,27 @@ namespace InitiativeTracker
             characters = new List<Character>();
             source = new BindingSource();
             gridview.AutoGenerateColumns = false;
-            gridview.AutoSize = false;
+            gridview.AutoSize = true;
+            //gridview.RowHeadersVisible = false;
             gridview.DataSource = source;
+
+            Gridview_LoadGrid();
+            this.Width = gridview.Width + 240;
+            gridview.RowLeave += Gridview_UpdateData;
+            gridview.CellValueChanged += Gridview_UpdateData;
+
+            optionShowType.Checked = Settings.Default.ShowType;
+            optionTrackHealth.Checked = Settings.Default.TrackHealth;
+            optionTrackArmor.Checked = Settings.Default.TrackArmor;
+            optionTrackAbilities.Checked = Settings.Default.TrackAbilities;
+            optionShowDexterity.Checked = Settings.Default.ShowDex;
+
+        }
+
+        private void Gridview_LoadGrid()
+        {
+            gridview.Columns.Clear();
+            int width = gridview.Width;
 
             DataGridViewColumn column;
             column = new DataGridViewTextBoxColumn();
@@ -47,15 +68,31 @@ namespace InitiativeTracker
             gridview.Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn();
+            column.DataPropertyName = "Health";
+            column.Name = "Health";
+            column.Width = 36;
+            column.Visible = Settings.Default.TrackHealth;
+            gridview.Columns.Add(column);
+
+            column = new DataGridViewTextBoxColumn();
+            column.DataPropertyName = "Max";
+            column.Name = "Max";
+            column.Width = 36;
+            column.Visible = Settings.Default.TrackHealth;
+            gridview.Columns.Add(column);
+
+            column = new DataGridViewTextBoxColumn();
             column.DataPropertyName = "Armor";
             column.Name = "AC";
             column.Width = 28;
+            column.Visible = Settings.Default.TrackArmor;
             gridview.Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn();
             column.DataPropertyName = "Dexterity";
             column.Name = "Dex";
             column.Width = 32;
+            column.Visible = Settings.Default.ShowDex;
             gridview.Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn();
@@ -63,9 +100,6 @@ namespace InitiativeTracker
             column.Name = "Initiative";
             column.Width = 56;
             gridview.Columns.Add(column);
-
-            gridview.RowLeave += Gridview_UpdateData;
-            gridview.CellValueChanged += Gridview_UpdateData;
         }
 
         private void Gridview_UpdateData(object sender, DataGridViewCellEventArgs e)
@@ -74,6 +108,7 @@ namespace InitiativeTracker
             DataGridViewRow r = gridview.Rows[e.RowIndex];
             characters.Where(c => c.ID == (int)r.Cells[0].Value).ToList().ForEach(c =>
             {
+                int editVal;
                 if (r.Cells[1].IsInEditMode)
                     switch (r.Cells[1].EditedFormattedValue.ToString()){
                         case "PC":
@@ -85,15 +120,27 @@ namespace InitiativeTracker
                         case "MOB":
                             c.Chartype = charType.MOB;
                             break;
+                        default:
+                            lbl_status.Text = "Invalid Character Type";
+                            break;
                     }
                 if (r.Cells[2].IsInEditMode)
                     c.Name = r.Cells[2].EditedFormattedValue.ToString();
                 if (r.Cells[3].IsInEditMode)
-                    c.Armor = int.Parse(r.Cells[3].EditedFormattedValue.ToString());
+                    if (int.TryParse(r.Cells[3].EditedFormattedValue.ToString(), out editVal))
+                        c.Armor = editVal;
+                    else
+                        lbl_status.Text = "Invalid Armor Value";
                 if (r.Cells[4].IsInEditMode)
-                    c.Dexterity = int.Parse(r.Cells[4].EditedFormattedValue.ToString());
+                    if (int.TryParse(r.Cells[4].EditedFormattedValue.ToString(), out editVal))
+                        c.Dexterity = editVal;
+                    else
+                        lbl_status.Text = "Invalid Dexterity Value";
                 if (r.Cells[5].IsInEditMode)
-                    c.Initiative = int.Parse(r.Cells[5].EditedFormattedValue.ToString());
+                    if (int.TryParse(r.Cells[5].EditedFormattedValue.ToString(), out editVal))
+                        c.Initiative = editVal;
+                    else
+                        lbl_status.Text = "Invalid Initiative Value";
             });
             refresh();
         }
@@ -105,6 +152,7 @@ namespace InitiativeTracker
             combo.DataPropertyName = "Chartype";
             combo.Name = "Type";
             combo.Width = 64;
+            combo.Visible = Settings.Default.ShowType;
             return combo;
         }
 
@@ -139,7 +187,7 @@ namespace InitiativeTracker
         {
             fromRefresh = true;
             source.DataSource = characters;
-            source.ResetBindings(true);
+            //source.ResetBindings(true);
             //foreach (Character c in characters)
                 //source.Add(c);
             //gridview.DataSource = source;
@@ -303,6 +351,42 @@ namespace InitiativeTracker
         {
             characters = new List<Character>();
             refresh();
+        }
+
+        private void num_AC_Enter(object sender, EventArgs e)
+        {
+            num_AC.Select(0, num_AC.Text.Length);
+        }
+
+        private void num_dex_Enter(object sender, EventArgs e)
+        {
+            num_dex.Select(0, num_dex.Text.Length);
+        }
+
+        private void num_init_Enter(object sender, EventArgs e)
+        {
+            num_init.Select(0, num_init.Text.Length);
+        }
+
+        private void menu_tools_options_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void UpdateUserOptions(object sender, EventArgs e)
+        {
+            //Settings.Default.PCcolor
+            //Settings.Default.MOBcolor
+            //Settings.Default.NPCcolor
+            Settings.Default.ShowType = optionShowType.Checked;
+            Settings.Default.TrackHealth = optionTrackHealth.Checked;
+            Settings.Default.TrackArmor = optionTrackArmor.Checked;
+            Settings.Default.TrackAbilities = optionTrackAbilities.Checked;
+            Settings.Default.ShowDex = optionShowDexterity.Checked;
+            Settings.Default.Save();
+            Gridview_LoadGrid();
+            refresh();
+            this.Width = gridview.Width + 240;
         }
     }
 }
