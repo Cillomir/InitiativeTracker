@@ -30,8 +30,8 @@ namespace InitiativeTracker
         private int maxHP;
         public int MaxHP { get { return maxHP; } set { maxHP =  value; } }
 
-        private int AC;
-        public int Armor { get { return AC; } set { AC = value; } }
+        private int armor;
+        public int Armor { get { return armor; } set { armor = value; } }
 
         private int strength;
         public int Strength { get { return strength; } set { strength = value; } }
@@ -54,39 +54,117 @@ namespace InitiativeTracker
         private int initiative;
         public int Initiative { get { return initiative; } set { initiative = value; } }
 
-        public Character(string name, charType chartype, int armor, int initiative, int dexterity)
+        // sc0      initiative only
+        // sc000        armor
+        // sc0000       health
+        // sc00000      health & armor
+        // sc0000000        abilities
+        // sc000000000      abilities & armor
+        // sc0000000000     abilities & health
+        // sc00000000000    abilities & health & armor
+        // 0cs000   import
+
+        public Character(string name, charType chartype, int initiative)
         {
             this.id = nextid++;
             this.chartype = chartype;
             this.name = name;
-            setZero();
-            this.AC = armor;
-            this.dexterity = dexterity;
-            this.initiative = initiative;
-        }
-
-        private void setZero()
-        {
             health = 1;
             maxHP = 1;
-            AC = 10;
+            armor = 10;
             strength = 10;
             dexterity = 10;
             constitution = 10;
             intelligence = 10;
             wisdom = 10;
             charisma = 10;
-            initiative = 0;
+            this.initiative = initiative;
+        }
+        public Character(string name, charType chartype, int initiative,
+            int armor, int dexterity)
+            : this(name, chartype, initiative)
+        {
+            this.armor = armor;
+            this.dexterity = dexterity;
+        }
+        public Character(string name, charType chartype, int initiative,
+            int health, int maxHP, int dexterity)
+            : this(name, chartype, initiative)
+        {
+            this.health = health;
+            this.maxHP = maxHP;
+            this.dexterity = dexterity;
+        }
+        public Character(string name, charType chartype, int initiative,
+            int health, int maxHP, int armor, int dexterity)
+            : this(name, chartype, initiative)
+        {
+            this.health = health;
+            this.maxHP = maxHP;
+            this.armor = armor;
+            this.dexterity = dexterity;
         }
 
-        public Character(int id, charType chartype, string name, int armor, int dexterity, int initiative)
+        public Character(string name, charType chartype, int initiative,
+            int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma)
+            : this(name, chartype, initiative)
+        {
+            this.strength = strength;
+            this.dexterity = dexterity;
+            this.constitution = constitution;
+            this.intelligence = intelligence;
+            this.wisdom = wisdom;
+            this.charisma = charisma;
+        }
+        public Character(string name, charType chartype, int initiative,
+            int armor,
+            int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma)
+            : this(name, chartype, initiative, armor, dexterity)
+        {
+            this.strength = strength;
+            this.constitution = constitution;
+            this.intelligence = intelligence;
+            this.wisdom = wisdom;
+            this.charisma = charisma;
+        }
+        public Character(string name, charType chartype, int initiative, 
+            int health, int maxHP,
+            int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma)
+            : this(name, chartype, initiative, health, maxHP, dexterity)
+        {
+            this.strength = strength;
+            this.constitution = constitution;
+            this.intelligence = intelligence;
+            this.wisdom = wisdom;
+            this.charisma = charisma;
+        }
+        public Character(string name, charType chartype, int initiative,
+            int health, int maxHP, int armor,
+            int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma)
+            : this(name, chartype, initiative, health, maxHP, armor, dexterity)
+        {
+            this.strength = strength;
+            this.constitution = constitution;
+            this.intelligence = intelligence;
+            this.wisdom = wisdom;
+            this.charisma = charisma;
+        }
+
+        public Character(int id, charType chartype, string name, 
+            int armor, int dexterity, int initiative)
         {
             this.id = id;
             this.chartype = chartype;
             this.name = name;
-            setZero();
-            this.AC = armor;
+            health = 1;
+            maxHP = 1;
+            this.armor = armor;
+            strength = 10;
             this.dexterity = dexterity;
+            constitution = 10;
+            intelligence = 10;
+            wisdom = 10;
+            charisma = 10;
             this.initiative = initiative;
         }
 
