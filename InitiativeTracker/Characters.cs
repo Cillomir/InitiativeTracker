@@ -28,7 +28,7 @@ namespace InitiativeTracker
         public int Health { get { return health; } set { health = value; } }
 
         private int maxHP;
-        public int MaxHP { get { return maxHP; } set { maxHP =  value; } }
+        public int MaxHP { get { return maxHP; } set { maxHP = value; } }
 
         private int armor;
         public int Armor { get { return armor; } set { armor = value; } }

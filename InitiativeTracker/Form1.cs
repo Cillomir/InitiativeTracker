@@ -19,10 +19,10 @@ namespace InitiativeTracker
 {
     public partial class Form1 : Form
     {
-        public List<Character> characters;
-        BindingSource source;
-        bool fromRefresh = false;
-        public int entryWidth = 320;
+        private List<Character> characters;
+        private BindingSource source;
+        private bool fromRefresh = false;
+        private int entryWidth = 320;
 
         public Form1()
         {
@@ -77,7 +77,7 @@ namespace InitiativeTracker
             gridview.Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn();
-            column.DataPropertyName = "Max";
+            column.DataPropertyName = "MaxHP";
             column.Name = "Max";
             column.Width = 36;
             column.Visible = Settings.Default.TrackHealth;
@@ -165,16 +165,51 @@ namespace InitiativeTracker
                     c.Name = r.Cells[2].EditedFormattedValue.ToString();
                 if (r.Cells[3].IsInEditMode)
                     if (int.TryParse(r.Cells[3].EditedFormattedValue.ToString(), out editVal))
+                        c.Health = editVal;
+                    else
+                        lbl_status.Text = "Invalid Health Value";
+                if (r.Cells[4].IsInEditMode)
+                    if (int.TryParse(r.Cells[4].EditedFormattedValue.ToString(), out editVal))
+                        c.MaxHP = editVal;
+                    else
+                        lbl_status.Text = "Invalid Health Value";
+                if (r.Cells[5].IsInEditMode)
+                    if (int.TryParse(r.Cells[5].EditedFormattedValue.ToString(), out editVal))
                         c.Armor = editVal;
                     else
                         lbl_status.Text = "Invalid Armor Value";
-                if (r.Cells[4].IsInEditMode)
-                    if (int.TryParse(r.Cells[4].EditedFormattedValue.ToString(), out editVal))
+                if (r.Cells[6].IsInEditMode)
+                    if (int.TryParse(r.Cells[6].EditedFormattedValue.ToString(), out editVal))
+                        c.Strength = editVal;
+                    else
+                        lbl_status.Text = "Invalid Strength Value";
+                if (r.Cells[7].IsInEditMode)
+                    if (int.TryParse(r.Cells[7].EditedFormattedValue.ToString(), out editVal))
                         c.Dexterity = editVal;
                     else
                         lbl_status.Text = "Invalid Dexterity Value";
-                if (r.Cells[5].IsInEditMode)
-                    if (int.TryParse(r.Cells[5].EditedFormattedValue.ToString(), out editVal))
+                if (r.Cells[8].IsInEditMode)
+                    if (int.TryParse(r.Cells[8].EditedFormattedValue.ToString(), out editVal))
+                        c.Constitution = editVal;
+                    else
+                        lbl_status.Text = "Invalid Constitution Value";
+                if (r.Cells[9].IsInEditMode)
+                    if (int.TryParse(r.Cells[9].EditedFormattedValue.ToString(), out editVal))
+                        c.Intelligence = editVal;
+                    else
+                        lbl_status.Text = "Invalid Intelligence Value";
+                if (r.Cells[10].IsInEditMode)
+                    if (int.TryParse(r.Cells[10].EditedFormattedValue.ToString(), out editVal))
+                        c.Wisdom = editVal;
+                    else
+                        lbl_status.Text = "Invalid Wisdom Value";
+                if (r.Cells[11].IsInEditMode)
+                    if (int.TryParse(r.Cells[11].EditedFormattedValue.ToString(), out editVal))
+                        c.Charisma = editVal;
+                    else
+                        lbl_status.Text = "Invalid Charisma Value";
+                if (r.Cells[12].IsInEditMode)
+                    if (int.TryParse(r.Cells[12].EditedFormattedValue.ToString(), out editVal))
                         c.Initiative = editVal;
                     else
                         lbl_status.Text = "Invalid Initiative Value";
@@ -238,6 +273,7 @@ namespace InitiativeTracker
                 num_init.Location = new Point(num_init.Location.X, num_str.Location.Y);
                 lbl_init.Location = new Point(lbl_init.Location.X, lbl_str.Location.Y);
             }
+
             if (Settings.Default.TrackAbilities)
             {
                 num_str.Enabled = num_str.Visible = lbl_str.Visible = true;
@@ -285,7 +321,6 @@ namespace InitiativeTracker
 
         private void add_character(charType chartype)
         {
-            // if (Settings.Default.TrackHealth)
             characters.Add(new Character(txt_name.Text, chartype, (int)num_init.Value,
                 (int)num_health.Value, (int)num_maxHP.Value, (int)num_AC.Value,
                 (int)num_str.Value, (int)num_dex.Value, (int)num_con.Value,
@@ -309,10 +344,10 @@ namespace InitiativeTracker
         {
             fromRefresh = true;
             source.DataSource = characters;
-            //source.ResetBindings(true);
             //foreach (Character c in characters)
                 //source.Add(c);
             gridview.DataSource = source;
+            //source.ResetBindings(true);
             gridview.Columns[0].Visible = false;
             foreach (DataGridViewRow r in gridview.Rows)
             {
@@ -345,7 +380,7 @@ namespace InitiativeTracker
             refresh();
         }
 
-        private void btn_clear_Click(object sender, EventArgs e)
+        private void btn_reset_Click(object sender, EventArgs e)
         {
             characters.ForEach(c => c.Initiative = 0);
             characters.Sort(Character.SortCharacter);
@@ -364,8 +399,15 @@ namespace InitiativeTracker
                         writer.Write("ID:" + c.ID + " ");
                         writer.Write("Name:" + c.Name + " ");
                         writer.Write("Type:" + c.Chartype + " ");
+                        writer.Write("Health:" + c.Health + " ");
+                        writer.Write("Max:" + c.MaxHP + " ");
                         writer.Write("Armor:" + c.Armor + " ");
+                        writer.Write("Str:" + c.Strength + " ");
                         writer.Write("Dex:" + c.Dexterity + " ");
+                        writer.Write("Con:" + c.Constitution + " ");
+                        writer.Write("Int:" + c.Intelligence + " ");
+                        writer.Write("Wis:" + c.Wisdom + " ");
+                        writer.Write("Cha:" + c.Charisma + " ");
                         writer.Write("Init:" + c.Initiative);
                         writer.WriteLine();
                     }
@@ -405,8 +447,15 @@ namespace InitiativeTracker
                 {
                     string name = "";
                     charType ct = 0;
+                    int health = 1;
+                    int maxHP = 1;
                     int armor = 10;
+                    int strength = 10;
                     int dexterity = 10;
+                    int constitution = 10;
+                    int intelligence = 10;
+                    int wisdom = 10;
+                    int charisma = 10;
                     int initiative = 0;
                     string[] lnArray = line.Split(' ');
                     foreach (string x in lnArray)
@@ -440,13 +489,41 @@ namespace InitiativeTracker
                                             break;
                                     }
                                     break;
+                                case "Health":
+                                    if (!int.TryParse(val, out health))
+                                        health = 1;
+                                    break;
+                                case "Max":
+                                    if (!int.TryParse(val, out maxHP))
+                                        maxHP = 1;
+                                    break;
                                 case "Armor":
                                     if (!int.TryParse(val, out armor))
                                         armor = 10;
                                     break;
+                                case "Str":
+                                    if (!int.TryParse(val, out strength))
+                                        strength = 10;
+                                    break;
                                 case "Dex":
                                     if (!int.TryParse(val, out dexterity))
                                         dexterity = 10;
+                                    break;
+                                case "Con":
+                                    if (!int.TryParse(val, out constitution))
+                                        constitution = 10;
+                                    break;
+                                case "Int":
+                                    if (!int.TryParse(val, out intelligence))
+                                        intelligence = 10;
+                                    break;
+                                case "Wis":
+                                    if (!int.TryParse(val, out wisdom))
+                                        wisdom = 10;
+                                    break;
+                                case "Cha":
+                                    if (!int.TryParse(val, out charisma))
+                                        charisma = 10;
                                     break;
                                 case "Init":
                                     if (!int.TryParse(val, out initiative))
@@ -462,7 +539,8 @@ namespace InitiativeTracker
                             Console.WriteLine(er.Message);
                         }
                     }
-                    characters.Add(new Character(name, ct, armor, initiative, dexterity));
+                    characters.Add(new Character(name, ct, initiative, health, maxHP, armor,  
+                        strength, dexterity, constitution, intelligence, wisdom, charisma));
                     line = fn.ReadLine();
                 }
                 refresh();
@@ -484,26 +562,6 @@ namespace InitiativeTracker
         {
             if (sender is NumericUpDown)
                 ((NumericUpDown)sender).Select(0, ((NumericUpDown)sender).Text.Length);
-        }
-
-        private void num_AC_Enter(object sender, EventArgs e)
-        {
-            num_AC.Select(0, num_AC.Text.Length);
-        }
-
-        private void num_dex_Enter(object sender, EventArgs e)
-        {
-            num_dex.Select(0, num_dex.Text.Length);
-        }
-
-        private void num_init_Enter(object sender, EventArgs e)
-        {
-            num_init.Select(0, num_init.Text.Length);
-        }
-
-        private void menu_tools_options_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void UpdateUserOptions(object sender, EventArgs e)

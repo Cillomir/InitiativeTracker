@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.btn_clear = new System.Windows.Forms.Button();
+            this.btn_reset = new System.Windows.Forms.Button();
             this.btn_next = new System.Windows.Forms.Button();
             this.btn_prev = new System.Windows.Forms.Button();
             this.btn_PC = new System.Windows.Forms.Button();
@@ -118,16 +118,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.num_cha)).BeginInit();
             this.SuspendLayout();
             // 
-            // btn_clear
+            // btn_reset
             // 
-            this.btn_clear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_clear.Location = new System.Drawing.Point(417, 312);
-            this.btn_clear.Name = "btn_clear";
-            this.btn_clear.Size = new System.Drawing.Size(199, 32);
-            this.btn_clear.TabIndex = 27;
-            this.btn_clear.Text = "Clear Initiative";
-            this.btn_clear.UseVisualStyleBackColor = true;
-            this.btn_clear.Click += new System.EventHandler(this.btn_clear_Click);
+            this.btn_reset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_reset.Location = new System.Drawing.Point(417, 312);
+            this.btn_reset.Name = "btn_reset";
+            this.btn_reset.Size = new System.Drawing.Size(199, 32);
+            this.btn_reset.TabIndex = 27;
+            this.btn_reset.Text = "Reset Initiative";
+            this.btn_reset.UseVisualStyleBackColor = true;
+            this.btn_reset.Click += new System.EventHandler(this.btn_reset_Click);
             // 
             // btn_next
             // 
@@ -419,7 +419,7 @@
             this.menu_file_new.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.menu_file_new.Size = new System.Drawing.Size(146, 22);
             this.menu_file_new.Text = "&New";
-            this.menu_file_new.Click += new System.EventHandler(this.btn_clear_Click);
+            this.menu_file_new.Click += new System.EventHandler(this.btn_clr_Click);
             // 
             // menu_file_open
             // 
@@ -636,7 +636,6 @@
             // 
             // optionPC
             // 
-            this.optionPC.Enabled = false;
             this.optionPC.Name = "optionPC";
             this.optionPC.Size = new System.Drawing.Size(185, 22);
             this.optionPC.Text = "PC Color";
@@ -938,7 +937,7 @@
             this.Controls.Add(this.btn_PC);
             this.Controls.Add(this.btn_prev);
             this.Controls.Add(this.btn_next);
-            this.Controls.Add(this.btn_clear);
+            this.Controls.Add(this.btn_reset);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -964,7 +963,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btn_clear;
+        private System.Windows.Forms.Button btn_reset;
         private System.Windows.Forms.Button btn_next;
         private System.Windows.Forms.Button btn_prev;
         private System.Windows.Forms.Button btn_PC;
