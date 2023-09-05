@@ -89,7 +89,7 @@
             this.indexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.lbl_health = new System.Windows.Forms.Label();
             this.num_health = new System.Windows.Forms.NumericUpDown();
@@ -104,6 +104,7 @@
             this.num_wis = new System.Windows.Forms.NumericUpDown();
             this.lbl_cha = new System.Windows.Forms.Label();
             this.num_cha = new System.Windows.Forms.NumericUpDown();
+            this.resetColorsToDefaultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.num_AC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_init)).BeginInit();
@@ -344,7 +345,15 @@
             // 
             // openFileDialog1
             // 
+            this.openFileDialog1.DefaultExt = "txt";
             this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.DefaultExt = "txt";
+            this.saveFileDialog1.FileName = "initiativeTracker";
+            this.saveFileDialog1.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
             // 
             // btn_add
             // 
@@ -580,7 +589,8 @@
             this.toolStripSeparator6,
             this.optionPC,
             this.optionMOB,
-            this.optionNPC});
+            this.optionNPC,
+            this.resetColorsToDefaultsToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "&Options";
@@ -591,7 +601,7 @@
             this.optionShowType.CheckOnClick = true;
             this.optionShowType.CheckState = System.Windows.Forms.CheckState.Checked;
             this.optionShowType.Name = "optionShowType";
-            this.optionShowType.Size = new System.Drawing.Size(185, 22);
+            this.optionShowType.Size = new System.Drawing.Size(199, 22);
             this.optionShowType.Text = "Show Character Type";
             this.optionShowType.Click += new System.EventHandler(this.UpdateUserOptions);
             // 
@@ -599,7 +609,7 @@
             // 
             this.optionTrackHealth.CheckOnClick = true;
             this.optionTrackHealth.Name = "optionTrackHealth";
-            this.optionTrackHealth.Size = new System.Drawing.Size(185, 22);
+            this.optionTrackHealth.Size = new System.Drawing.Size(199, 22);
             this.optionTrackHealth.Text = "Track Health";
             this.optionTrackHealth.CheckedChanged += new System.EventHandler(this.UpdateUserOptions);
             // 
@@ -607,7 +617,7 @@
             // 
             this.optionTrackArmor.CheckOnClick = true;
             this.optionTrackArmor.Name = "optionTrackArmor";
-            this.optionTrackArmor.Size = new System.Drawing.Size(185, 22);
+            this.optionTrackArmor.Size = new System.Drawing.Size(199, 22);
             this.optionTrackArmor.Text = "Track Armor Class";
             this.optionTrackArmor.CheckedChanged += new System.EventHandler(this.UpdateUserOptions);
             // 
@@ -615,7 +625,7 @@
             // 
             this.optionTrackAbilities.CheckOnClick = true;
             this.optionTrackAbilities.Name = "optionTrackAbilities";
-            this.optionTrackAbilities.Size = new System.Drawing.Size(185, 22);
+            this.optionTrackAbilities.Size = new System.Drawing.Size(199, 22);
             this.optionTrackAbilities.Text = "Track Ability Scores";
             this.optionTrackAbilities.CheckedChanged += new System.EventHandler(this.UpdateUserOptions);
             // 
@@ -625,35 +635,35 @@
             this.optionShowDexterity.CheckOnClick = true;
             this.optionShowDexterity.CheckState = System.Windows.Forms.CheckState.Checked;
             this.optionShowDexterity.Name = "optionShowDexterity";
-            this.optionShowDexterity.Size = new System.Drawing.Size(185, 22);
+            this.optionShowDexterity.Size = new System.Drawing.Size(199, 22);
             this.optionShowDexterity.Text = "Show Dexterity Score";
             this.optionShowDexterity.CheckedChanged += new System.EventHandler(this.UpdateUserOptions);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(182, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(196, 6);
             // 
             // optionPC
             // 
             this.optionPC.Name = "optionPC";
-            this.optionPC.Size = new System.Drawing.Size(185, 22);
+            this.optionPC.Size = new System.Drawing.Size(199, 22);
             this.optionPC.Text = "PC Color";
             this.optionPC.Click += new System.EventHandler(this.optionPC_Click);
             // 
             // optionMOB
             // 
-            this.optionMOB.Enabled = false;
             this.optionMOB.Name = "optionMOB";
-            this.optionMOB.Size = new System.Drawing.Size(185, 22);
+            this.optionMOB.Size = new System.Drawing.Size(199, 22);
             this.optionMOB.Text = "MOB Color";
+            this.optionMOB.Click += new System.EventHandler(this.optionMOB_Click);
             // 
             // optionNPC
             // 
-            this.optionNPC.Enabled = false;
             this.optionNPC.Name = "optionNPC";
-            this.optionNPC.Size = new System.Drawing.Size(185, 22);
+            this.optionNPC.Size = new System.Drawing.Size(199, 22);
             this.optionNPC.Text = "NPC Color";
+            this.optionNPC.Click += new System.EventHandler(this.optionNPC_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -662,7 +672,7 @@
             this.indexToolStripMenuItem,
             this.searchToolStripMenuItem,
             this.toolStripSeparator5,
-            this.aboutToolStripMenuItem});
+            this.helpAbout});
             this.helpToolStripMenuItem.Enabled = false;
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -670,32 +680,36 @@
             // 
             // contentsToolStripMenuItem
             // 
+            this.contentsToolStripMenuItem.Enabled = false;
             this.contentsToolStripMenuItem.Name = "contentsToolStripMenuItem";
-            this.contentsToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.contentsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.contentsToolStripMenuItem.Text = "&Contents";
             // 
             // indexToolStripMenuItem
             // 
+            this.indexToolStripMenuItem.Enabled = false;
             this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-            this.indexToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.indexToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.indexToolStripMenuItem.Text = "&Index";
             // 
             // searchToolStripMenuItem
             // 
+            this.searchToolStripMenuItem.Enabled = false;
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            this.searchToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.searchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.searchToolStripMenuItem.Text = "&Search";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(119, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
-            // aboutToolStripMenuItem
+            // helpAbout
             // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
-            this.aboutToolStripMenuItem.Text = "&About...";
+            this.helpAbout.Name = "helpAbout";
+            this.helpAbout.Size = new System.Drawing.Size(180, 22);
+            this.helpAbout.Text = "&About...";
+            this.helpAbout.Click += new System.EventHandler(this.helpAbout_Click);
             // 
             // lbl_health
             // 
@@ -899,6 +913,13 @@
             this.num_cha.Click += new System.EventHandler(this.numeric_Enter);
             this.num_cha.Enter += new System.EventHandler(this.numeric_Enter);
             // 
+            // resetColorsToDefaultsToolStripMenuItem
+            // 
+            this.resetColorsToDefaultsToolStripMenuItem.Name = "resetColorsToDefaultsToolStripMenuItem";
+            this.resetColorsToDefaultsToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.resetColorsToDefaultsToolStripMenuItem.Text = "Reset Colors to Defaults";
+            this.resetColorsToDefaultsToolStripMenuItem.Click += new System.EventHandler(this.optionResetColor_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1013,7 +1034,7 @@
         private System.Windows.Forms.ToolStripMenuItem indexToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpAbout;
         private System.Windows.Forms.ToolStripMenuItem menu_file_add;
         private System.Windows.Forms.ToolStripMenuItem optionTrackHealth;
         private System.Windows.Forms.ToolStripMenuItem optionTrackArmor;
@@ -1038,6 +1059,7 @@
         private System.Windows.Forms.NumericUpDown num_wis;
         private System.Windows.Forms.Label lbl_cha;
         private System.Windows.Forms.NumericUpDown num_cha;
+        private System.Windows.Forms.ToolStripMenuItem resetColorsToDefaultsToolStripMenuItem;
     }
 }
 

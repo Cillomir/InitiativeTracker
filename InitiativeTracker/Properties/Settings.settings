@@ -15,13 +15,13 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="PCcolor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">LightSteelBlue</Value>
     </Setting>
     <Setting Name="NPCcolor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">YellowGreen</Value>
     </Setting>
     <Setting Name="MOBcolor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">LightCoral</Value>
     </Setting>
     <Setting Name="ShowType" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

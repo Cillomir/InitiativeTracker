@@ -1,9 +1,11 @@
 ﻿/* **************************************************
- * Initiative Tracker v1
+ * Initiative Tracker v1.20
  * Author: Joel Leckie
  * Created: Aug. 2023
  * 
  * A lightweight initiative tracker for tabletop games
+ *  v1.20 - Added user options, tracking for health, 
+ *          AC, and ability scores. Added menu strip.
  ************************************************** */
 using InitiativeTracker.Properties;
 using System;
@@ -27,6 +29,7 @@ namespace InitiativeTracker
         public Form1()
         {
             InitializeComponent();
+            InitializeOptionColors();
             characters = new List<Character>();
             source = new BindingSource();
             gridview.AutoGenerateColumns = false;
@@ -46,6 +49,19 @@ namespace InitiativeTracker
 
             UpdateEntryBoxes();
             this.Width = gridview.Width + entryWidth;
+        }
+
+        private void InitializeOptionColors()
+        {
+            if (Settings.Default.PCcolor == null)
+                Settings.Default.PCcolor = Color.LightSteelBlue;
+            if (Settings.Default.NPCcolor == null)
+                Settings.Default.NPCcolor = Color.YellowGreen;
+            if (Settings.Default.MOBcolor == null)
+                Settings.Default.MOBcolor = Color.LightCoral;
+            btn_PC.BackColor = Settings.Default.PCcolor;
+            btn_NPC.BackColor = Settings.Default.NPCcolor;
+            btn_MOB.BackColor = Settings.Default.MOBcolor;
         }
 
         private void Gridview_LoadGrid()
@@ -325,6 +341,7 @@ namespace InitiativeTracker
                 (int)num_health.Value, (int)num_maxHP.Value, (int)num_AC.Value,
                 (int)num_str.Value, (int)num_dex.Value, (int)num_con.Value,
                 (int)num_int.Value, (int)num_wis.Value, (int)num_cha.Value));
+            Gridview_LoadGrid();
             refresh();
             txt_name.Focus();
             txt_name.Text = "";
@@ -351,20 +368,18 @@ namespace InitiativeTracker
             gridview.Columns[0].Visible = false;
             foreach (DataGridViewRow r in gridview.Rows)
             {
+                r.Cells[2].Style.Font = new Font(gridview.Font, FontStyle.Regular);
                 switch (r.Cells[1].Value.ToString())
                 {
                     case "PC":
-                        r.Cells[2].Style.BackColor = Color.LightSteelBlue;
-                        //r.Cells[2].Style.BackColor = Settings.Default.PCcolor;
+                        r.Cells[2].Style.BackColor = Settings.Default.PCcolor;
                         r.Cells[2].Style.Font = new Font(gridview.Font, FontStyle.Bold);
                         break;
                     case "NPC":
-                        r.Cells[2].Style.BackColor = Color.YellowGreen;
-                        //r.Cells[2].Style.BackColor = Settings.Default.NPCcolor;
+                        r.Cells[2].Style.BackColor = Settings.Default.NPCcolor;
                         break;
                     case "MOB":
-                        r.Cells[2].Style.BackColor = Color.LightCoral;
-                        //r.Cells[2].Style.BackColor = Settings.Default.MOBcolor;
+                        r.Cells[2].Style.BackColor = Settings.Default.MOBcolor;
                         break;
                     default:
                         break;
@@ -543,6 +558,7 @@ namespace InitiativeTracker
                         strength, dexterity, constitution, intelligence, wisdom, charisma));
                     line = fn.ReadLine();
                 }
+                Gridview_LoadGrid();
                 refresh();
             }
             catch (Exception er)
@@ -566,9 +582,6 @@ namespace InitiativeTracker
 
         private void UpdateUserOptions(object sender, EventArgs e)
         {
-            //Settings.Default.PCcolor
-            //Settings.Default.MOBcolor
-            //Settings.Default.NPCcolor
             Settings.Default.ShowType = optionShowType.Checked;
             Settings.Default.TrackHealth = optionTrackHealth.Checked;
             Settings.Default.TrackArmor = optionTrackArmor.Checked;
@@ -583,14 +596,56 @@ namespace InitiativeTracker
 
         private void optionPC_Click(object sender, EventArgs e)
         {
+            colorDialog1.Color = Settings.Default.PCcolor;
             if (colorDialog1.ShowDialog() == DialogResult.OK)
             {
+                btn_PC.BackColor = colorDialog1.Color;
                 Settings.Default.PCcolor = colorDialog1.Color;
                 Settings.Default.Save();
                 Gridview_LoadGrid();
                 refresh();
-                UpdateEntryBoxes();
             }
+        }
+        private void optionNPC_Click(object sender, EventArgs e)
+        {
+            colorDialog1.Color = Settings.Default.NPCcolor;
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                btn_NPC.BackColor = colorDialog1.Color;
+                Settings.Default.NPCcolor = colorDialog1.Color;
+                Settings.Default.Save();
+                Gridview_LoadGrid();
+                refresh();
+            }
+        }
+        private void optionMOB_Click(object sender, EventArgs e)
+        {
+            colorDialog1.Color = Settings.Default.MOBcolor;
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                btn_MOB.BackColor = colorDialog1.Color;
+                Settings.Default.MOBcolor = colorDialog1.Color;
+                Settings.Default.Save();
+                Gridview_LoadGrid();
+                refresh();
+            }
+        }
+        private void optionResetColor_Click(object sender, EventArgs e)
+        {
+            btn_PC.BackColor = Color.LightSteelBlue;
+            btn_NPC.BackColor = Color.YellowGreen;
+            btn_MOB.BackColor = Color.LightCoral;
+            Settings.Default.PCcolor = Color.LightSteelBlue;
+            Settings.Default.NPCcolor = Color.YellowGreen;
+            Settings.Default.MOBcolor = Color.LightCoral;
+            Settings.Default.Save();
+            Gridview_LoadGrid();
+            refresh();
+        }
+
+        private void helpAbout_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

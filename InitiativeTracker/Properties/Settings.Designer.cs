@@ -73,6 +73,7 @@ namespace InitiativeTracker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("LightSteelBlue")]
         public global::System.Drawing.Color PCcolor {
             get {
                 return ((global::System.Drawing.Color)(this["PCcolor"]));
@@ -84,6 +85,7 @@ namespace InitiativeTracker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("YellowGreen")]
         public global::System.Drawing.Color NPCcolor {
             get {
                 return ((global::System.Drawing.Color)(this["NPCcolor"]));
@@ -95,6 +97,7 @@ namespace InitiativeTracker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("LightCoral")]
         public global::System.Drawing.Color MOBcolor {
             get {
                 return ((global::System.Drawing.Color)(this["MOBcolor"]));
