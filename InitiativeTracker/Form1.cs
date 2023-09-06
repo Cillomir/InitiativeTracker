@@ -1,11 +1,15 @@
 ﻿/* **************************************************
- * Initiative Tracker v1.20
+ * Initiative Tracker v0.2.0
  * Author: Joel Leckie
  * Created: Aug. 2023
  * 
  * A lightweight initiative tracker for tabletop games
- *  v1.20 - Added user options, tracking for health, 
- *          AC, and ability scores. Added menu strip.
+ *  v0.1.0 - Created save, load, and add functions for
+ *           tracking initiative, dexterity, and character
+ *           type. Included sort feature.
+ *  v0.2.0 - Added user options, tracking for health, AC,
+ *           and ability scores. Added menu strip. Fixes
+ *           to editing fields in grid.
  ************************************************** */
 using InitiativeTracker.Properties;
 using System;

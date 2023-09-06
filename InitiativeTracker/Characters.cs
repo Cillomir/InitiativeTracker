@@ -1,7 +1,12 @@
 ﻿/* **************************************************
- * Initiative Tracker v1
+ * Initiative Tracker - Character v0.2.0
  * Author: Joel Leckie
  * Created: Aug. 2023
+ *  v0.1.0 - Created character class to store basic 
+ *           fields. Created sort functions.
+ *  v0.2.0 - Added additional fields with corresponding
+ *           constructors for health, AC, and ability 
+ *           scores.
  ************************************************** */
 
 namespace InitiativeTracker
