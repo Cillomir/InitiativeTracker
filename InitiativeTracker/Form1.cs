@@ -10,6 +10,8 @@
  *  v0.2.0 - Added user options, tracking for health, AC,
  *           and ability scores. Added menu strip. Fixes
  *           to editing fields in grid.
+ *  v0.3.0 - Added buttons to clone and delete a character.
+ *           Can randomize initiative for a character.
  ************************************************** */
 using InitiativeTracker.Properties;
 using System;
@@ -44,6 +46,7 @@ namespace InitiativeTracker
             Gridview_LoadGrid();
             gridview.RowLeave += Gridview_UpdateData;
             gridview.CellValueChanged += Gridview_UpdateData;
+            gridview.CellClick += new DataGridViewCellEventHandler(GridView_CellClick);
 
             optionShowType.Checked = Settings.Default.ShowType;
             optionTrackHealth.Checked = Settings.Default.TrackHealth;
@@ -157,83 +160,144 @@ namespace InitiativeTracker
             column.Name = "Initiative";
             column.Width = 56;
             gridview.Columns.Add(column);
+
+            //DataGridViewCellCollection group = new DataGridViewCellCollection();
+
+            DataGridViewButtonColumn button;
+            button = new DataGridViewButtonColumn();
+            button.Name = "Clone";
+            button.Width = 48;
+            button.Text = "Clone";
+            button.UseColumnTextForButtonValue = true;
+            gridview.Columns.Add(button);
+
+            button = new DataGridViewButtonColumn();
+            button.Name = "Delete";
+            button.Width = 48;
+            button.Text = "Delete";
+            button.UseColumnTextForButtonValue = true;
+            gridview.Columns.Add(button);
+
+            button = new DataGridViewButtonColumn();
+            button.Name = "Randomize";
+            button.Width = 48;
+            button.Text = "RND";
+            button.UseColumnTextForButtonValue = true;
+            gridview.Columns.Add(button);
         }
 
         private void Gridview_UpdateData(object sender, DataGridViewCellEventArgs e)
         {
             if (fromRefresh) return;
             DataGridViewRow r = gridview.Rows[e.RowIndex];
-            characters.Where(c => c.ID == (int)r.Cells[0].Value).ToList().ForEach(c =>
+            if (r.Cells["ID"].Value == null) return;
+            try
             {
+                Character ch = characters.Find(c => c.ID == (int)r.Cells["ID"].Value);
                 int editVal;
-                if (r.Cells[1].IsInEditMode)
-                    switch (r.Cells[1].EditedFormattedValue.ToString()){
+                if (r.Cells["Type"].IsInEditMode)
+                    switch (r.Cells["Type"].EditedFormattedValue.ToString())
+                    {
                         case "PC":
-                            c.Chartype = charType.PC;
+                            ch.Chartype = charType.PC;
                             break;
                         case "NPC":
-                            c.Chartype = charType.NPC;
+                            ch.Chartype = charType.NPC;
                             break;
                         case "MOB":
-                            c.Chartype = charType.MOB;
+                            ch.Chartype = charType.MOB;
                             break;
                         default:
                             lbl_status.Text = "Invalid Character Type";
                             break;
                     }
-                if (r.Cells[2].IsInEditMode)
-                    c.Name = r.Cells[2].EditedFormattedValue.ToString();
-                if (r.Cells[3].IsInEditMode)
-                    if (int.TryParse(r.Cells[3].EditedFormattedValue.ToString(), out editVal))
-                        c.Health = editVal;
+                if (r.Cells["Name"].IsInEditMode)
+                    ch.Name = r.Cells["Name"].EditedFormattedValue.ToString();
+                if (r.Cells["HP"].IsInEditMode)
+                    if (int.TryParse(r.Cells["HP"].EditedFormattedValue.ToString(), out editVal))
+                        ch.Health = editVal;
                     else
                         lbl_status.Text = "Invalid Health Value";
-                if (r.Cells[4].IsInEditMode)
-                    if (int.TryParse(r.Cells[4].EditedFormattedValue.ToString(), out editVal))
-                        c.MaxHP = editVal;
+                if (r.Cells["Max"].IsInEditMode)
+                    if (int.TryParse(r.Cells["Max"].EditedFormattedValue.ToString(), out editVal))
+                        ch.MaxHP = editVal;
                     else
                         lbl_status.Text = "Invalid Health Value";
-                if (r.Cells[5].IsInEditMode)
-                    if (int.TryParse(r.Cells[5].EditedFormattedValue.ToString(), out editVal))
-                        c.Armor = editVal;
+                if (r.Cells["AC"].IsInEditMode)
+                    if (int.TryParse(r.Cells["AC"].EditedFormattedValue.ToString(), out editVal))
+                        ch.Armor = editVal;
                     else
                         lbl_status.Text = "Invalid Armor Value";
-                if (r.Cells[6].IsInEditMode)
-                    if (int.TryParse(r.Cells[6].EditedFormattedValue.ToString(), out editVal))
-                        c.Strength = editVal;
+                if (r.Cells["Str"].IsInEditMode)
+                    if (int.TryParse(r.Cells["Str"].EditedFormattedValue.ToString(), out editVal))
+                        ch.Strength = editVal;
                     else
                         lbl_status.Text = "Invalid Strength Value";
-                if (r.Cells[7].IsInEditMode)
-                    if (int.TryParse(r.Cells[7].EditedFormattedValue.ToString(), out editVal))
-                        c.Dexterity = editVal;
+                if (r.Cells["Dex"].IsInEditMode)
+                    if (int.TryParse(r.Cells["Dex"].EditedFormattedValue.ToString(), out editVal))
+                        ch.Dexterity = editVal;
                     else
                         lbl_status.Text = "Invalid Dexterity Value";
-                if (r.Cells[8].IsInEditMode)
-                    if (int.TryParse(r.Cells[8].EditedFormattedValue.ToString(), out editVal))
-                        c.Constitution = editVal;
+                if (r.Cells["Con"].IsInEditMode)
+                    if (int.TryParse(r.Cells["Con"].EditedFormattedValue.ToString(), out editVal))
+                        ch.Constitution = editVal;
                     else
                         lbl_status.Text = "Invalid Constitution Value";
-                if (r.Cells[9].IsInEditMode)
-                    if (int.TryParse(r.Cells[9].EditedFormattedValue.ToString(), out editVal))
-                        c.Intelligence = editVal;
+                if (r.Cells["Int"].IsInEditMode)
+                    if (int.TryParse(r.Cells["Int"].EditedFormattedValue.ToString(), out editVal))
+                        ch.Intelligence = editVal;
                     else
                         lbl_status.Text = "Invalid Intelligence Value";
-                if (r.Cells[10].IsInEditMode)
-                    if (int.TryParse(r.Cells[10].EditedFormattedValue.ToString(), out editVal))
-                        c.Wisdom = editVal;
+                if (r.Cells["Wis"].IsInEditMode)
+                    if (int.TryParse(r.Cells["Wis"].EditedFormattedValue.ToString(), out editVal))
+                        ch.Wisdom = editVal;
                     else
                         lbl_status.Text = "Invalid Wisdom Value";
-                if (r.Cells[11].IsInEditMode)
-                    if (int.TryParse(r.Cells[11].EditedFormattedValue.ToString(), out editVal))
-                        c.Charisma = editVal;
+                if (r.Cells["Cha"].IsInEditMode)
+                    if (int.TryParse(r.Cells["Cha"].EditedFormattedValue.ToString(), out editVal))
+                        ch.Charisma = editVal;
                     else
                         lbl_status.Text = "Invalid Charisma Value";
-                if (r.Cells[12].IsInEditMode)
-                    if (int.TryParse(r.Cells[12].EditedFormattedValue.ToString(), out editVal))
-                        c.Initiative = editVal;
+                if (r.Cells["Initiative"].IsInEditMode)
+                    if (int.TryParse(r.Cells["Initiative"].EditedFormattedValue.ToString(), out editVal))
+                        ch.Initiative = editVal;
                     else
                         lbl_status.Text = "Invalid Initiative Value";
-            });
+            }
+            catch { }
+            refresh();
+        }
+
+        public void GridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            Character ch = characters.Find(c => c.ID == (int)gridview.Rows[e.RowIndex].Cells["ID"].Value);
+            if (e.ColumnIndex == gridview.Columns["Clone"].Index)
+            {
+                try
+                {
+                    characters.Add(new Character(ch.Name, ch.Chartype, ch.Initiative, ch.Health, ch.MaxHP, ch.Armor,
+                        ch.Strength, ch.Dexterity, ch.Constitution, ch.Intelligence, ch.Wisdom, ch.Charisma));
+                }
+                catch { }
+            }
+            /*
+            else if (e.ColumnIndex == gridview.Columns["Delete"].Index)
+            {
+                try
+                {
+                    characters.Remove(ch);
+                    gridview.Rows.Remove(gridview.Rows[e.RowIndex]);
+                }
+                catch { }
+            }
+            */
+            else if (e.ColumnIndex == gridview.Columns["Randomize"].Index)
+            {
+                ch.RandomInitiative();
+            }
+            else return;
+            Gridview_LoadGrid();
             refresh();
         }
 
@@ -365,28 +429,32 @@ namespace InitiativeTracker
         {
             fromRefresh = true;
             source.DataSource = characters;
-            //foreach (Character c in characters)
-                //source.Add(c);
             gridview.DataSource = source;
-            //source.ResetBindings(true);
             gridview.Columns[0].Visible = false;
             foreach (DataGridViewRow r in gridview.Rows)
             {
-                r.Cells[2].Style.Font = new Font(gridview.Font, FontStyle.Regular);
-                switch (r.Cells[1].Value.ToString())
+                if (r.Cells["ID"].Value != null)
                 {
-                    case "PC":
-                        r.Cells[2].Style.BackColor = Settings.Default.PCcolor;
-                        r.Cells[2].Style.Font = new Font(gridview.Font, FontStyle.Bold);
-                        break;
-                    case "NPC":
-                        r.Cells[2].Style.BackColor = Settings.Default.NPCcolor;
-                        break;
-                    case "MOB":
-                        r.Cells[2].Style.BackColor = Settings.Default.MOBcolor;
-                        break;
-                    default:
-                        break;
+                    try
+                    {
+                        r.Cells["Name"].Style.Font = new Font(gridview.Font, FontStyle.Regular);
+                        switch (r.Cells["Type"].Value.ToString())
+                        {
+                            case "PC":
+                                r.Cells["Name"].Style.BackColor = Settings.Default.PCcolor;
+                                r.Cells["Name"].Style.Font = new Font(gridview.Font, FontStyle.Bold);
+                                break;
+                            case "NPC":
+                                r.Cells["Name"].Style.BackColor = Settings.Default.NPCcolor;
+                                break;
+                            case "MOB":
+                                r.Cells["Name"].Style.BackColor = Settings.Default.MOBcolor;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    catch { }
                 }
             }
             fromRefresh = false;

@@ -7,6 +7,7 @@
  *  v0.2.0 - Added additional fields with corresponding
  *           constructors for health, AC, and ability 
  *           scores.
+ *  v0.3.0 - Can randomize initiative for a character.
  ************************************************** */
 
 namespace InitiativeTracker
@@ -19,6 +20,8 @@ namespace InitiativeTracker
     public class Character
     {
         private static int nextid = 1;
+
+        private static System.Random rnd = new System.Random();
         
         private int id;
         public int ID { get { return id; } }
@@ -67,7 +70,6 @@ namespace InitiativeTracker
         // sc000000000      abilities & armor
         // sc0000000000     abilities & health
         // sc00000000000    abilities & health & armor
-        // 0cs000   import
 
         public Character(string name, charType chartype, int initiative)
         {
@@ -109,7 +111,6 @@ namespace InitiativeTracker
             this.armor = armor;
             this.dexterity = dexterity;
         }
-
         public Character(string name, charType chartype, int initiative,
             int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma)
             : this(name, chartype, initiative)
@@ -155,24 +156,6 @@ namespace InitiativeTracker
             this.charisma = charisma;
         }
 
-        public Character(int id, charType chartype, string name, 
-            int armor, int dexterity, int initiative)
-        {
-            this.id = id;
-            this.chartype = chartype;
-            this.name = name;
-            health = 1;
-            maxHP = 1;
-            this.armor = armor;
-            strength = 10;
-            this.dexterity = dexterity;
-            constitution = 10;
-            intelligence = 10;
-            wisdom = 10;
-            charisma = 10;
-            this.initiative = initiative;
-        }
-
         public static int SortCharacter(Character c1, Character c2)
         {
             if (c1.chartype == c2.chartype)
@@ -191,6 +174,13 @@ namespace InitiativeTracker
                 return c2.dexterity.CompareTo(c1.dexterity);
             }
             return c2.initiative.CompareTo(c1.initiative);
+        }
+
+        public void RandomInitiative()
+        {
+            int dexMod = (int)System.Math.Floor((dexterity - 10) / 2.0);
+            initiative = rnd.Next(1, 20) + dexMod;
+            if (initiative < 1) initiative = 1;
         }
     }
 }
